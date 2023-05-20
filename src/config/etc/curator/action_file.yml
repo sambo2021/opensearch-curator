@@ -1,0 +1,46 @@
+actions:
+  1:
+    action: delete_indices
+    description: "Clean up ES by deleting old indices"
+    options:
+      timeout_override:
+      continue_if_exception: False
+      disable_action: False
+      ignore_empty_list: True
+    filters:
+    - filtertype: age
+      source: name
+      direction: older
+      timestring: '%Y.%m.%d'
+      unit: days
+      unit_count: 32
+      field:
+      stats_result:
+      epoch:
+      exclude: False
+    - filtertype: pattern
+      kind: prefix
+      value: test-
+      exclude: True
+  2:
+    action: delete_indices
+    description: "Clean up Cloudtrail log by deleting old indices"
+    options:
+      timeout_override:
+      continue_if_exception: False
+      disable_action: False
+      ignore_empty_list: True
+    filters:
+    - filtertype: pattern
+      kind: prefix
+      value: test-
+    - filtertype: age
+      source: name
+      direction: older
+      timestring: '%Y.%m.%d'
+      unit: days
+      unit_count: 7
+      field:
+      stats_result:
+      epoch:
+      exclude: False

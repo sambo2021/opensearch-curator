@@ -6,6 +6,6 @@ COPY config /
 COPY src /app
 
 RUN pip3 install --upgrade pip && \
-    pip3 install -r requirements.txt
+    pip3 install -r requirments.txt
 
 ENTRYPOINT ["python3", "main.py"]

@@ -27,7 +27,7 @@ class OpensearchClient:
         #         pool_maxsize = 20
         #     )           
         # else:
-        #     # auth = (_.get(client_info, 'username'), _.get(client_info, 'password')) # For testing only. Don't store credentials in code.
+        auth = (_.get(client_info, 'username'), _.get(client_info, 'password')) # For testing only. Don't store credentials in code.
 
         #     # Provide a CA bundle if you use intermediate CAs with your root CA.
         #     # If this is not given, the CA bundle is is discovered from the first available
@@ -57,7 +57,7 @@ class OpensearchClient:
         self.client = OpenSearch(
                 hosts = opensearch_hosts,
                 http_compress = True, # enables gzip compression for request bodies
-                # http_auth = auth,
+                http_auth = auth,
                 # # client_cert = client_cert_path,
                 # # client_key = client_key_path,
                 use_ssl = _.get(client_info, 'use_ssl', True),

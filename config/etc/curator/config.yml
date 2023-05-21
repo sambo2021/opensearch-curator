@@ -1,7 +1,9 @@
 client:
   hosts:
-    - 192.168.80.28
-  port: 9200
+    - 'ur-opensearch-domain'
+  port: 443
+  username: username
+  password: password
   # url_prefix:
   use_ssl: True
   ssl_no_validate: True

@@ -4,6 +4,8 @@ from lib.opensearch import OpensearchClient
 import pydash as _
 import yaml
 import argparse
+import datetime
+
 
 def get_parser():
     '''
@@ -20,20 +22,22 @@ parser = get_parser()
 args = parser.parse_args()
 config = config_parser.parse_config(args.config)
 # print(_.get(config, 'client'))
-
-dry_run = args.dry_run
+#dry_run = args.dry_run
+dry_run = False
 action_path = args.action_path
 # print(config_path)
-
 options = {}
 options['dry_run'] = dry_run
-
 opensearch = OpensearchClient(_.get(config, 'client'))
+
+
+#using today date at aech day to delete old indices
+today = datetime.datetime.now().date()
 
 with open(action_path, "r") as stream:
     try:
         actions = yaml.safe_load(stream)
         for action_list in actions['actions']:
-            curator.do_curator_action(opensearch.list_index(), actions['actions'][action_list], options)
+            curator.do_curator_action(opensearch , actions['actions'][action_list], today )
     except yaml.YAMLError as exc:
         print(exc)

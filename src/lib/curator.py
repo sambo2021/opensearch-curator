@@ -1,41 +1,42 @@
 import lib.opensearch as opensearch
-import curator
 import pydash as _
+import datetime
+import re
 
+def curator_delete(opensearch, prefix, count, today):
+    pattern = r"^"+prefix+r".*$"
+    filtered_items = [item for item in opensearch.list_index().all_indices if re.match(pattern, item)]
+    print(filtered_items)
+    if (len(filtered_items)>0):
+        for item in filtered_items:
+            print(opensearch.list_index().index_info[item])
+            # the creation date of each index matches the prefix 
+            index_Creation_time = datetime.datetime.fromtimestamp(opensearch.list_index().index_info[item]['age']['creation_date'])
+            diff = (today - index_Creation_time.date()).days
+            if ( diff >=  count):
+                try:  
+                    response = opensearch.client.search(index=item)
+                    try:
+                        response = opensearch.client.indices.delete(index = item)
+                        print("deleting index : " + item)
+                        print(response)
+                    except:
+                        print(item +": cant be deleted")
+                except: 
+                 print("index not found")
+            else:
+                print("no indices for "+prefix+" in older direction")
+    else:
+        print("no indices found for "+prefix)
 
-def curator_delete(index_list, dry_run):
-    try:
-        delete_indicies = curator.DeleteIndices(index_list)
-        if dry_run:
-            delete_indicies.do_dry_run()
-        else:
-            delete_indicies.do_action()
-    except:
-        print('Skip for empty index lists.')
+def do_curator_action(opensearch , action, today):
+    index_list = {}
+    if action['action'] == 'delete_indices':
+        for filter_lists in action['filters']:
+            if filter_lists['filtertype'] == 'age':
+                    index_list['unit_count']=filter_lists['unit_count']      
+            if filter_lists['filtertype'] == 'pattern':
+                    index_list['value']=filter_lists['value']
+    curator_delete(opensearch, index_list['value'] , index_list['unit_count'] , today)
+                    
 
-def do_curator_action(index_list, action, options):
-    try:
-        if action['action'] == 'delete_indices':
-            print(action['description'])
-            for filter_lists in action['filters']:
-                if filter_lists['filtertype'] == 'age':
-                    index_list.filter_by_age(
-                        source=_.get(filter_lists,'source'),
-                        direction=filter_lists['direction'],
-                        timestring=filter_lists['timestring'],
-                        unit=filter_lists['unit'],
-                        unit_count=filter_lists['unit_count'],
-                        field=filter_lists['field'],
-                        stats_result=filter_lists['stats_result'],
-                        epoch=filter_lists['epoch'],
-                        exclude=_.get(filter_lists, 'exclude', False)
-                    )
-                if filter_lists['filtertype'] == 'pattern':
-                    index_list.filter_by_regex(
-                        kind=filter_lists['kind'],
-                        value=filter_lists['value'],
-                        exclude=_.get(filter_lists, 'exclude', False)
-                    )
-            curator_delete(index_list, options['dry_run'])
-    except:
-        print("Skip for empty index")

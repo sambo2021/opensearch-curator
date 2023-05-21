@@ -1,10 +1,10 @@
 actions:
   1:
     action: delete_indices
-    description: "Clean up ES by deleting old indices"
+    description: "Clean up kbernetes by deleting old indices"
     options:
       timeout_override:
-      continue_if_exception: False
+      continue_if_exception: True
       disable_action: False
       ignore_empty_list: True
     filters:
@@ -13,34 +13,55 @@ actions:
       direction: older
       timestring: '%Y.%m.%d'
       unit: days
-      unit_count: 32
+      unit_count: 5
       field:
       stats_result:
       epoch:
       exclude: False
     - filtertype: pattern
       kind: prefix
-      value: test-
-      exclude: True
+      value: kuberntes-
   2:
     action: delete_indices
-    description: "Clean up Cloudtrail log by deleting old indices"
+    description: "Clean up Jaeger by deleting old indices"
     options:
       timeout_override:
-      continue_if_exception: False
+      continue_if_exception: True
       disable_action: False
       ignore_empty_list: True
     filters:
-    - filtertype: pattern
-      kind: prefix
-      value: test-
     - filtertype: age
       source: name
       direction: older
       timestring: '%Y.%m.%d'
       unit: days
-      unit_count: 7
+      unit_count: 3
       field:
       stats_result:
       epoch:
       exclude: False
+    - filtertype: pattern
+      kind: prefix
+      value: jaeger-
+  3:
+    action: delete_indices
+    description: "Clean up ay7aga by deleting old indices"
+    options:
+      timeout_override:
+      continue_if_exception: True
+      disable_action: False
+      ignore_empty_list: True
+    filters:
+    - filtertype: age
+      source: name
+      direction: older
+      timestring: '%Y.%m.%d'
+      unit: days
+      unit_count: 2
+      field:
+      stats_result:
+      epoch:
+      exclude: False
+    - filtertype: pattern
+      kind: prefix
+      value: ay7aga-

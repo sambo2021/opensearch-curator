@@ -1,6 +1,6 @@
 client:
   hosts:
-    - 'ur-opensearch-domain'
+    - 'opensearh-endpoits'
   port: 443
   username: username
   password: password
@@ -9,5 +9,6 @@ client:
   ssl_no_validate: True
 logging:
   loglevel: INFO
-  logformat: default
+  logfile:
+  logformat: json
   blacklist: ['opensearch', 'urllib3']

@@ -1,0 +1,60 @@
+---
+# Source: elasticsearch/templates/cronjob.yaml
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: elasticsearch-curator-curator
+  labels:
+    app.kubernetes.io/name: elasticsearch
+    helm.sh/chart: elasticsearch
+    app.kubernetes.io/instance: elasticsearch-curator
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/component: curator
+    app: curator
+spec:
+  schedule: "0 1 * * *"
+  jobTemplate:
+    metadata:
+      labels:
+        app.kubernetes.io/name: elasticsearch
+        helm.sh/chart: elasticsearch
+        app.kubernetes.io/instance: elasticsearch-curator
+        app.kubernetes.io/managed-by: Helm
+        app.kubernetes.io/component: curator
+        app: curator
+    spec:
+      template:
+        metadata:
+          labels:
+            app.kubernetes.io/name: elasticsearch
+            helm.sh/chart: elasticsearch
+            app.kubernetes.io/instance: elasticsearch-curator
+            app.kubernetes.io/managed-by: Helm
+            app.kubernetes.io/component: curator
+            app: curator
+        spec:
+          volumes:
+            - name: config-volume
+              configMap:
+                name: elasticsearch-curator-curator
+          restartPolicy: Never          
+          affinity:
+            podAffinity: 
+            podAntiAffinity:
+            nodeAffinity:
+          containers:
+            - name: elasticsearch-curator-curator
+              image: {{ .Values.curator.image.registry }}/{{ .Values.curator.image.repository }}:{{ .Values.curator.image.tag }}
+              imagePullPolicy: "IfNotPresent"
+              volumeMounts:
+                - name: config-volume
+                  mountPath: /etc/es-curator
+              command: 
+                - curator
+              args: [ "--config", "/etc/es-curator/config.yml", "/etc/es-curator/action_file.yml" ]
+              env:
+                - name: "PYTHONWARNINGS"
+                  value: "ignore:Unverified HTTPS request"
+              resources:
+                limits: {}
+                requests: {}

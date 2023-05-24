@@ -1,12 +1,9 @@
-import lib.opensearch as opensearch
-import pydash as _
 import datetime
 import re
 
 def curator_delete(opensearch, prefix, count, today):
     pattern = r"^"+prefix+r".*$"
     filtered_items = [item for item in opensearch.list_index().all_indices if re.match(pattern, item)]
-    print(filtered_items)
     if (len(filtered_items)>0):
         for item in filtered_items:
             print(opensearch.list_index().index_info[item])
@@ -25,7 +22,7 @@ def curator_delete(opensearch, prefix, count, today):
                 except: 
                  print("index not found")
             else:
-                print("no indices for "+prefix+" in older direction")
+                print("index "+item+" is not in older direction")
     else:
         print("no indices found for "+prefix)
 

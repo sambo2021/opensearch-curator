@@ -26,8 +26,6 @@ config = config_parser.parse_config(args.config)
 dry_run = False
 action_path = args.action_path
 # print(config_path)
-options = {}
-options['dry_run'] = dry_run
 opensearch = OpensearchClient(_.get(config, 'client'))
 
 

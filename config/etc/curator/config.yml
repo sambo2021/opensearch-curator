@@ -1,10 +1,9 @@
 client:
   hosts:
-    - 'opensearh-endpoits'
+    - "search-train-hlcvcu7wubl2yrvupsbuineg7a.us-east-1.es.amazonaws.com"
   port: 443
-  username: username
-  password: password
-  # url_prefix:
+  username: ""
+  password: ""
   use_ssl: True
   ssl_no_validate: True
 logging:

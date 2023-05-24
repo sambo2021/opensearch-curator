@@ -12,12 +12,9 @@ class OpensearchClient:
                 'port': _.get(client_info, 'port')
             })
 
-        auth = (_.get(client_info, 'username'), _.get(client_info, 'password')) # For testing only. Don't store credentials in code.
-        
         self.client = OpenSearch(
                 hosts = opensearch_hosts,
                 http_compress = True, # enables gzip compression for request bodies
-                http_auth = auth,
                 use_ssl = _.get(client_info, 'use_ssl', True),
                 verify_certs = _.get(client_info, 'verify_certs', False),
                 ssl_assert_hostname = False,
@@ -27,7 +24,7 @@ class OpensearchClient:
     def list_index(self):
         index_list = curator.IndexList(self.client)
         return index_list
-    
+
     def get_client(self):
         return self.client
 

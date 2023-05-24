@@ -1,9 +1,7 @@
 client:
   hosts:
-    - "search-train-hlcvcu7wubl2yrvupsbuineg7a.us-east-1.es.amazonaws.com"
+    - "{{ your-domain-name }}"
   port: 443
-  username: ""
-  password: ""
   use_ssl: True
   ssl_no_validate: True
 logging:

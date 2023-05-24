@@ -5,7 +5,12 @@ import pydash as _
 import yaml
 import argparse
 import datetime
+import logging
 
+
+
+logging.basicConfig(level=logging.INFO)
+logger = logging.getLogger(__name__)
 
 def get_parser():
     '''
@@ -21,13 +26,8 @@ def get_parser():
 parser = get_parser()
 args = parser.parse_args()
 config = config_parser.parse_config(args.config)
-# print(_.get(config, 'client'))
-#dry_run = args.dry_run
-dry_run = False
 action_path = args.action_path
-# print(config_path)
 opensearch = OpensearchClient(_.get(config, 'client'))
-
 
 #using today date at aech day to delete old indices
 today = datetime.datetime.now().date()
@@ -36,6 +36,7 @@ with open(action_path, "r") as stream:
     try:
         actions = yaml.safe_load(stream)
         for action_list in actions['actions']:
+            logger.info("Preparing Action ID :"+str(action_list))
             curator.do_curator_action(opensearch , actions['actions'][action_list], today )
     except yaml.YAMLError as exc:
-        print(exc)
+        logger.warning(exc)

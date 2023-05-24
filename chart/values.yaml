@@ -1,0 +1,10 @@
+es:
+  host: OVERWRITE_ME
+  proto: https
+  port: 443
+
+curator:
+  image:
+    registry: docker.io
+    repository: mohamedsambo/opensearch-curator
+    tag: v0.2.0

@@ -1,4 +1,4 @@
-actions:
+ctions:
   1:
     action: delete_indices
     description: "Clean up kbernetes by deleting old indices"
@@ -13,14 +13,14 @@ actions:
       direction: older
       timestring: '%Y.%m.%d'
       unit: days
-      unit_count: 2
+      unit_count: 1
       field:
       stats_result:
       epoch:
       exclude: False
     - filtertype: pattern
       kind: prefix
-      value: kuberntes-
+      value: kubernetes_
   2:
     action: delete_indices
     description: "Clean up Jaeger by deleting old indices"
@@ -35,7 +35,7 @@ actions:
       direction: older
       timestring: '%Y.%m.%d'
       unit: days
-      unit_count: 2
+      unit_count: 1
       field:
       stats_result:
       epoch:

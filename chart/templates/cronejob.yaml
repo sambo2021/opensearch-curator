@@ -49,12 +49,8 @@ spec:
               volumeMounts:
                 - name: config-volume
                   mountPath: /etc/es-curator
-              command: 
-                - curator
-              args: [ "--config", "/etc/es-curator/config.yml", "/etc/es-curator/action_file.yml" ]
-              env:
-                - name: "PYTHONWARNINGS"
-                  value: "ignore:Unverified HTTPS request"
+              command: ["python3","./main.py"]
+              args: [ "-c", "/etc/es-curator/config.yml","-d","/etc/es-curator/action_file.yml" ]
               resources:
                 limits: {}
                 requests: {}
